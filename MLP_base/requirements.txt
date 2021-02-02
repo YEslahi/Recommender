@@ -1,0 +1,8 @@
+pytest
+pandas
+numpy
+tensorflow
+keras
+logging
+pickle
+flake8
