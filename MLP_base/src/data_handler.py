@@ -1,7 +1,10 @@
 import glob
 import pickle
+import logging
+a_logger = logging.getLogger()
+a_logger.setLevel(logging.DEBUG)
 
-class SuperDataSet:
+class DataSet:
     """ A class of datasets, that loads, modifies and process their data."""
     def __init__(self, name, path, split):
         """
@@ -15,7 +18,7 @@ class SuperDataSet:
         
         self.name = name
         self.path = path
-        self.split = split
+        self.split = str(split)
     def load_dataset(self):
         """
         parameters: 
@@ -25,12 +28,15 @@ class SuperDataSet:
             input_data: dict
             A dict of 4 data splits and 2 price matrix."""    
         input_data = {}
-        file_names = [f.replace(self.path,"").replace(".pkl", "") for f in glob.glob(self.path + str(self.split) + "/*.pkl")]
+        file_names = \
+            [f.replace(self.path + self.split + "/", "").
+            replace(".pkl", "") for f in
+            glob.glob(self.path + self.split + "/*.pkl")]
+
         for file_name in file_names:
-            with open(self.path + file_name + '.pkl', 'rb') as f:
+            with open(self.path + self.split + "/" + file_name + '.pkl', 'rb') as f:
                 input_data[file_name] = pickle.load(f)
-                logging.info(file_name, ' loaded')
-                print(file_name, ' loaded')
+                print("{0} loaded".format(file_name))
 
         return input_data
 
@@ -40,7 +46,7 @@ class SuperDataSet:
     def preprocessor(self):
         return
 
-class ml1m(SuperDataSet):
+class Ml1m(DataSet):
     def __init__(self, name='ml1m'):
         path = '../../data/ml1m/'
         split=1
